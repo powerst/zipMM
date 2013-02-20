@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 				if(out != NULL)
 					fclose(out);
 			}
+			fclose(archive);
 		}
 	}
 	else if(strcmp(argv[1], "-w") == 0) {
@@ -41,6 +42,7 @@ int main(int argc, char **argv)
 					fclose(in);
 				}
 			}
+			fclose(archive);
 		}
 	}
 	else {

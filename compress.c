@@ -68,6 +68,8 @@ FILE* decompress(FILE* in) {
 		printf("Decompression Error: Could not create file %s\n", fileName);
 		return NULL;
 	}
+	free(fileName);
+	fileName = NULL;
 	//TODO: Actually decompress the file
 	//3: Size of file content (4 bytes)
 	contentSz = readLong(in);
