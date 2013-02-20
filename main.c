@@ -8,24 +8,24 @@
 int main(int argc, char **argv)
 {
 	if (argc <= 1) {
-		printf("You must specify at least one file to be compressed.");
+		printf("You must specify at least one file to be compressed.\n");
 		return 1;
 	}
 
 	unsigned char buffer[BUFFER_SIZE];
 
-	argv++;
 	int i;
 	for (i = 1; i < argc; i++) {
-		char *filePath = *argv;
+		char *filePath = *(argv+i);
 		FILE *in = fopen(filePath, "rb");
-		
-		
-		while (readInput(in, buffer, BUFFER_SIZE) != EOF) {
-			
+		if (in == NULL) {
+			printf("Error opening file: %s\n", filePath);
+			continue;
 		}
+		
+		// read input, compress, write output
 
-		argv++;
+		fclose(in);
 	}
 
 	return 0;
