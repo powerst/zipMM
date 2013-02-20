@@ -1,32 +1,51 @@
 #include <stdio.h>
-#include "input.h"
-#include "output.h"
+#include <string.h>
 #include "compress.h"
-
-#define BUFFER_SIZE 1024
 
 int main(int argc, char **argv)
 {
-	if (argc <= 1) {
-		printf("You must specify at least one file to be compressed.\n");
+	FILE* archive, *in, *out;
+	int i;
+	if (argc < 3) {
+		printf("Usage: tarMM -r [infile]\ntarMM -w [outfile] [file file ...]\n");
 		return 1;
 	}
-
-	unsigned char buffer[BUFFER_SIZE];
-
-	int i;
-	for (i = 1; i < argc; i++) {
-		char *filePath = *(argv+i);
-		FILE *in = fopen(filePath, "rb");
-		if (in == NULL) {
-			printf("Error opening file: %s\n", filePath);
-			continue;
+	else if(strcmp(argv[1], "-r") == 0) {
+		archive = fopen(argv[2], "rb+");
+		if(archive == NULL) {
+			printf("Error opening archive: %s\n", argv[2]);
+			return 1;
 		}
-		
-		// read input, compress, write output
-
-		fclose(in);
+		else {
+			while(!feof(archive)) {
+				out = decompress(archive);
+				if(out != NULL)
+					fclose(out);
+			}
+		}
 	}
-
+	else if(strcmp(argv[1], "-w") == 0) {
+		archive = fopen(argv[2], "wb+");
+		if(archive == NULL) {
+			printf("Error opening archive: %s\n", argv[2]);
+			return 1;
+		}
+		else {
+			for (i = 3; i < argc; i++) {
+				in = fopen(argv[i], "rb+");
+				if (in == NULL) {
+					printf("Error opening file: %s\n", argv[i]);
+				}
+				else {
+					compress(archive, in, argv[i]);
+					fclose(in);
+				}
+			}
+		}
+	}
+	else {
+		printf("Unrecognized mode...\n");
+		return 2;
+	}
 	return 0;
 }
