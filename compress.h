@@ -3,4 +3,4 @@
 #define CHUNK_SIZE 4096
 
 void compress(FILE* out, FILE* in, const char * name);
-FILE* decompress(FILE* in);
+void decompress(FILE* in);

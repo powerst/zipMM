@@ -17,11 +17,7 @@ int main(int argc, char **argv)
 			return 1;
 		}
 		else {
-			while(!feof(archive)) {
-				out = decompress(archive);
-				if(out != NULL)
-					fclose(out);
-			}
+			decompress(archive);
 			fclose(archive);
 		}
 	}

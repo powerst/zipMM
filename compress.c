@@ -49,35 +49,36 @@ void compress(FILE* out, FILE* in, const char * name) {
 	}
 }
 
-FILE* decompress(FILE* in) {
+void decompress(FILE* in) {
 	char buffer[CHUNK_SIZE], *fileName;
 	int count, nameSz;
 	long contentSz;
 	FILE* out;
-	//reading the header
-	//1: Size of file name (2 bytes)
-	nameSz = readInt(in);
-	if(feof(in)) {
-		return NULL;
+	while(!feof(in)) {
+		//reading the header
+		//1: Size of file name (2 bytes)
+		nameSz = readInt(in);
+		if(feof(in)) {
+			return;
+		}
+		//2: File name
+		fileName = (char*)malloc(nameSz);
+		fread(fileName, 1, nameSz, in);
+		out = fopen(fileName, "wb+");
+		if(out == NULL) {
+			printf("Decompression Error: Could not create file %s\n", fileName);
+			return;
+		}
+		free(fileName);
+		//TODO: Actually decompress the file
+		//3: Size of file content (4 bytes)
+		contentSz = readLong(in);
+		//4: Actual content
+		while(contentSz > 0) {
+			count = fread(buffer, 1, contentSz, in);
+			fwrite(buffer, 1, count, out);
+			contentSz -= count;
+		}
+		fclose(out);
 	}
-	//2: File name
-	fileName = (char*)malloc(nameSz);
-	fread(fileName, 1, nameSz, in);
-	out = fopen(fileName, "wb+");
-	if(out == NULL) {
-		printf("Decompression Error: Could not create file %s\n", fileName);
-		return NULL;
-	}
-	free(fileName);
-	fileName = NULL;
-	//TODO: Actually decompress the file
-	//3: Size of file content (4 bytes)
-	contentSz = readLong(in);
-	//4: Actual content
-	while(contentSz > 0) {
-		count = fread(buffer, 1, contentSz, in);
-		fwrite(buffer, 1, count, out);
-		contentSz -= count;
-	}
-	return out;
 }
