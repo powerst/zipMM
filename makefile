@@ -1,4 +1,4 @@
 all:
-	gcc -o tarmm.exe main.c input.c output.c compress.c
+	gcc -o tarmm main.c compress.c
 clean:
-	rm -f tarmm.exe
+	rm -f tarmm
