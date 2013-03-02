@@ -42,19 +42,6 @@ static void node_free(struct avl_tree* t, struct node* n) {
 }
 
 /*
-Free a node n in avl_tree t without freeing the entry
-returns the entry
-*/
-static void* node_free_noe(struct avl_tree* t, struct node* n) {
-	void* olde = NULL;
-	if(n != NULL) {
-		olde = n->e;
-		free(n);
-	}
-	return olde;
-}
-
-/*
 Free a subtree with root node f in avl_tree t
 */
 static void subtree_free(struct avl_tree* t, struct node* r) {
@@ -119,13 +106,11 @@ Put node n to the binary tree. put n just as if this is a regular
 binary search tree (cur is the node we are currently comparing to),
 then call addRepair to restore AVL properties if necessary
 
-Returns the old node if there is one, null otherwise - dont
-free the old node!
 Note - add never has to deal with t->root being null (and 
 hence cur never being null if there are no bugs) as this case 
 is covered in avl_add
 */
-struct node* put(struct avl_tree* t, struct node* cur, struct node* n) {
+void put(struct avl_tree* t, struct node* cur, struct node* n) {
 
 }
 
@@ -178,20 +163,14 @@ struct avl_tree* avl_init(avl_cmp e_cmp, avl_cleanup e_free) {
 }
 
 /*
-put entry e in the avl_tree, returning the old entry if there is one
+put entry e in the avl_tree
 */
-void* avl_put(struct avl_tree* t, void* e) {
-	struct node* old;
+void avl_put(struct avl_tree* t, void* e) {
 	if(t->root == NULL) {
 		t->root = node_init(NULL, e);
-		return NULL;
 	}
 	else {
-		old = put(t, t->root, node_init(NULL, e));
-		if(old != NULL)
-			return node_free_noe(t, old);
-		else
-			return NULL;
+		put(t, t->root, node_init(NULL, e));
 	}
 }
 
@@ -199,14 +178,12 @@ void* avl_put(struct avl_tree* t, void* e) {
 remove node with entry from the avl tree if it exists
 returns the old entry if it existed, or null otherwise 
 */
-void* avl_remove(struct avl_tree* t, void* e) {
+void avl_remove(struct avl_tree* t, void* e) {
 	struct node* n = find(t, t->root, e);
 	if(n != NULL) {
 		remove(t, n);
-		return node_free_noe(t, n);
+		node_free(t, n);
 	}
-	else
-		return NULL;
 }
 
 /*
