@@ -1,4 +1,4 @@
 all:
-	gcc -o tarmm main.c compress.c io.c avl_tree.c
+	gcc -o zipmm main.c compress.c io.c avl_tree.c
 clean:
-	rm -f tarmm
+	rm -f zipmm
