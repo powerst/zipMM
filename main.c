@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 	FILE* archive, *in, *out;
 	int i;
 	if (argc < 3) {
-		printf("Usage: tarMM -r [infile]\ntarMM -w [outfile] [file file ...]\n");
+		printf("Usage: zipmm -r [infile]\nzipmm -w [outfile] [file file ...]\n");
 		return 1;
 	}
 	else if(strcmp(argv[1], "-r") == 0) {
